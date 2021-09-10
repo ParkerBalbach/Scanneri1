@@ -61,14 +61,9 @@ class Scanner(object):
         if self.done():
             return False
         
-        print('value:',self.program[self.pos])
         c = self.program[self.pos]
         start_pos = self.pos
-        print('At position:',start_pos)
 
-        if c == "=":
-            print('found =')
-            exit()
         if c in self.letters:
             self.many(self.letters)
             self.token = Token('id', self.program[start_pos:self.pos])
@@ -84,10 +79,9 @@ class Scanner(object):
             self.token = Token(symb, symb)
 
         elif c in self.digits:
-            self.many(self.symbols)
+            self.many(self.digits)
             self.token = Token('num', self.program[start_pos:self.pos])
             
-        self.pos += 1
         return True
 
     def match(self, t):
