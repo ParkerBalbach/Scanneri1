@@ -14,8 +14,8 @@ class Scanner(object):
     digits = set("0123456789")
     letters = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
     legits = set("_").union(digits).union(letters)
-    #symbols = set("@[\]^_`!\"#$%&',)(*+-./:;<=>?")
-    operators = {}
+    symbols = set("@[\]^_`!\"#$%&',)(*+-./:;<=>?")
+    operators = {'='}
     keywords = {}
     token = ""
     lexeme = ""
@@ -60,8 +60,34 @@ class Scanner(object):
         self.many(self.whitespace)
         if self.done():
             return False
+        
+        print('value:',self.program[self.pos])
         c = self.program[self.pos]
-        ### fill in here (is c a digit? keyword? id?)
+        start_pos = self.pos
+        print('At position:',start_pos)
+
+        if c == "=":
+            print('found =')
+            exit()
+        if c in self.letters:
+            self.many(self.letters)
+            self.token = Token('id', self.program[start_pos:self.pos])
+
+        elif c in self.operators:
+            self.many(self.operators)
+            op = self.program[start_pos:self.pos]
+            self.token = Token(op, op)
+
+        elif c in self.symbols:
+            self.many(self.symbols)
+            symb = self.program[start_pos:self.pos]
+            self.token = Token(symb, symb)
+
+        elif c in self.digits:
+            self.many(self.symbols)
+            self.token = Token('num', self.program[start_pos:self.pos])
+            
+        self.pos += 1
         return True
 
     def match(self, t):
